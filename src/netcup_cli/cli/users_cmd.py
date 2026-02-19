@@ -38,6 +38,7 @@ def get_user(user_id: int) -> None:
 @click.option("--body", type=str, required=True, help="JSON body (language, timeZone required).")
 def update_user(user_id: int, body: str) -> None:
     import json
+
     try:
         data = json.loads(body)
     except json.JSONDecodeError as e:
@@ -56,10 +57,12 @@ from .users_resources_cmd import (
     failoverips_group,
     firewall_policies_group,
     ssh_keys_group,
-    vlans_group as user_vlans_group,
     user_images_group,
     user_isos_group,
     user_logs_group,
+)
+from .users_resources_cmd import (
+    vlans_group as user_vlans_group,
 )
 
 users_group.add_command(failoverips_group, "failoverips")

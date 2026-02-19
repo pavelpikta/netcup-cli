@@ -62,9 +62,10 @@ def flavours(server_id: int) -> None:
 
 @image_group.command("setup", help="Setup image (use --body JSON or key=val).")
 @click.argument("server_id", type=int)
-@click.option("--body", type=str, help="JSON body (e.g. {\"imageFlavourId\":1,\"diskName\":\"vda\"}).")
+@click.option("--body", type=str, help='JSON body (e.g. {"imageFlavourId":1,"diskName":"vda"}).')
 def setup(server_id: int, body: str | None) -> None:
     import json
+
     if not body:
         click.echo(click.style("Provide --body with JSON", fg="red"), err=True)
         raise SystemExit(1)
@@ -94,7 +95,9 @@ def user_image_group():
 @click.option("--name", "user_image_name", required=True, help="User image name.")
 @click.option("--disk-name", help="Disk name.")
 @click.option("--email-notification", is_flag=True, help="Send email when done.")
-def setup_cmd(server_id: int, user_image_name: str, disk_name: str | None, email_notification: bool) -> None:
+def setup_cmd(
+    server_id: int, user_image_name: str, disk_name: str | None, email_notification: bool
+) -> None:
     body = {"userImageName": user_image_name}
     if disk_name:
         body["diskName"] = disk_name
@@ -118,7 +121,12 @@ def storage_opt_group():
 @storage_opt_group.command("start", help="Start storage optimization.")
 @click.argument("server_id", type=int)
 @click.option("--disks", multiple=True, help="Disk name(s) (repeat for multiple).")
-@click.option("--start-after", "start_after_optimization", is_flag=True, help="Start server after optimization.")
+@click.option(
+    "--start-after",
+    "start_after_optimization",
+    is_flag=True,
+    help="Start server after optimization.",
+)
 def start(server_id: int, disks: tuple[str, ...], start_after_optimization: bool) -> None:
     disk_list = list(disks) if disks else None
     try:

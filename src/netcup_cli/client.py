@@ -65,9 +65,13 @@ class APIClient:
         raise_for_status: bool = True,
     ) -> requests.Response:
         resp = self._request(
-            method, path,
-            params=params, json=json, data=data,
-            content_type=content_type, accept=accept,
+            method,
+            path,
+            params=params,
+            json=json,
+            data=data,
+            content_type=content_type,
+            accept=accept,
         )
         if raise_for_status and not resp.ok:
             raise APIError(

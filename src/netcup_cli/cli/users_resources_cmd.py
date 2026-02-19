@@ -131,7 +131,9 @@ def fp_list(user_id: int | None, limit: int | None, offset: int | None, query: s
 def fp_get(user_id: int | None, policy_id: int, with_servers_count: bool) -> None:
     uid = resolve_user_id(user_id)
     try:
-        data = firewall_policy_get(uid, policy_id, with_count_of_affected_servers=with_servers_count)
+        data = firewall_policy_get(
+            uid, policy_id, with_count_of_affected_servers=with_servers_count
+        )
     except (APIError, ConfigError) as e:
         click.echo(click.style(str(e), fg="red"), err=True)
         raise SystemExit(1) from e
@@ -143,6 +145,7 @@ def fp_get(user_id: int | None, policy_id: int, with_servers_count: bool) -> Non
 @click.option("--body", type=str, required=True, help="JSON: name, description?, rules[].")
 def fp_create(user_id: int | None, body: str) -> None:
     import json
+
     uid = resolve_user_id(user_id)
     try:
         data = json.loads(body)
@@ -163,6 +166,7 @@ def fp_create(user_id: int | None, body: str) -> None:
 @click.option("--body", type=str, required=True)
 def fp_update(user_id: int | None, policy_id: int, body: str) -> None:
     import json
+
     uid = resolve_user_id(user_id)
     try:
         data = json.loads(body)

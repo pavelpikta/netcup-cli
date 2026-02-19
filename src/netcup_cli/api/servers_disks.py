@@ -1,7 +1,5 @@
 """Server disks API."""
 
-from typing import Any
-
 from .base import get_client
 
 

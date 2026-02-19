@@ -48,9 +48,7 @@ def refresh_access_token(refresh_token: str) -> dict:
         timeout=30,
     )
     if resp.status_code != 200:
-        raise AuthError(
-            f"Token refresh failed: {resp.status_code} - {resp.text}"
-        )
+        raise AuthError(f"Token refresh failed: {resp.status_code} - {resp.text}")
     return resp.json()
 
 
@@ -72,9 +70,7 @@ def load_credentials(path: Path | None = None) -> dict:
     """Load stored credentials (refresh_token). Raises ConfigError if missing or invalid."""
     p = path or credentials_path()
     if not p.exists():
-        raise ConfigError(
-            "No stored credentials. Run: netcup auth login"
-        )
+        raise ConfigError("No stored credentials. Run: netcup auth login")
     try:
         data = json.loads(p.read_text())
     except (json.JSONDecodeError, OSError) as e:
@@ -121,7 +117,11 @@ def wait_for_device_authorization(
             return exchange_device_code(device_code)
         except requests.HTTPError as e:
             if e.response.status_code == 400:
-                body = e.response.json() if e.response.headers.get("content-type", "").startswith("application/json") else {}
+                body = (
+                    e.response.json()
+                    if e.response.headers.get("content-type", "").startswith("application/json")
+                    else {}
+                )
                 error = body.get("error", "")
                 if error == "authorization_pending":
                     time.sleep(interval)

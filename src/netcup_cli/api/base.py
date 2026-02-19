@@ -1,7 +1,7 @@
 """Base helpers for API modules."""
 
 from ..client import APIClient
-from ..config import API_BASE_URL, API_ROOT
+from ..config import API_BASE_URL
 
 _default_client: APIClient | None = None
 

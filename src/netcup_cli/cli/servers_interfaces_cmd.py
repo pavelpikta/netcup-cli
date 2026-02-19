@@ -71,9 +71,10 @@ def create_cmd(server_id: int, vlan_id: int, driver: str) -> None:
 @interfaces_group.command("update", help="Update interface (--body JSON with driver etc.).")
 @click.argument("server_id", type=int)
 @click.argument("mac", type=str)
-@click.option("--body", type=str, required=True, help="JSON body e.g. {\"driver\":\"VIRTIO\"}.")
+@click.option("--body", type=str, required=True, help='JSON body e.g. {"driver":"VIRTIO"}.')
 def update_cmd(server_id: int, mac: str, body: str) -> None:
     import json
+
     try:
         data = json.loads(body)
     except json.JSONDecodeError as e:
@@ -123,12 +124,15 @@ def get_fw(server_id: int, mac: str, consistency_check: bool) -> None:
     print_json(data)
 
 
-@firewall_group.command("put", help="Set firewall (--body JSON: copiedPolicies, userPolicies, active).")
+@firewall_group.command(
+    "put", help="Set firewall (--body JSON: copiedPolicies, userPolicies, active)."
+)
 @click.argument("server_id", type=int)
 @click.argument("mac", type=str)
 @click.option("--body", type=str, required=True, help="JSON body.")
 def put_fw(server_id: int, mac: str, body: str) -> None:
     import json
+
     try:
         data = json.loads(body)
     except json.JSONDecodeError as e:

@@ -18,7 +18,9 @@ def servers_group():
 @click.option("--ip", help="Filter by IP.")
 @click.option("--name", help="Filter by server name.")
 @click.option("-q", "query", help="Search in name, nickname, ipv4Addresses.")
-def list_servers(limit: int | None, offset: int | None, ip: str | None, name: str | None, query: str | None) -> None:
+def list_servers(
+    limit: int | None, offset: int | None, ip: str | None, name: str | None, query: str | None
+) -> None:
     try:
         data = server_list(limit=limit, offset=offset, ip=ip, name=name, q=query)
     except (APIError, ConfigError) as e:
@@ -87,18 +89,18 @@ def set_nickname(server_id: int, nickname: str) -> None:
 
 # Register server sub-resource groups
 from .servers_disks_cmd import disks_group
+from .servers_interfaces_cmd import firewall_group, interfaces_group
 from .servers_iso_cmd import iso_group
-from .servers_snapshots_cmd import snapshots_group
-from .servers_rescue_cmd import rescue_group
 from .servers_metrics_cmd import metrics_group
-from .servers_interfaces_cmd import interfaces_group, firewall_group
 from .servers_misc_cmd import (
-    logs_group,
     guest_agent_group,
     image_group,
-    user_image_group,
+    logs_group,
     storage_opt_group,
+    user_image_group,
 )
+from .servers_rescue_cmd import rescue_group
+from .servers_snapshots_cmd import snapshots_group
 
 servers_group.add_command(disks_group, "disks")
 servers_group.add_command(interfaces_group, "interfaces")
