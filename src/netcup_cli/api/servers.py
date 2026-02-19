@@ -45,10 +45,11 @@ def server_patch(
     body: dict,
     state_option: str | None = None,
 ) -> dict | None:
-    """PATCH /api/v1/servers/{serverId} - Patch server (state, hostname, etc.). Returns JSON or None for 204."""
+    """PATCH /api/v1/servers/{serverId} - Patch server (state, hostname, etc.).
+    Returns JSON or None for 204."""
     client = get_client()
     params = {"stateOption": state_option} if state_option else None
-    resp = client.patch(f"/servers/{server_id}", json=body)
+    resp = client.patch(f"/servers/{server_id}", json=body, params=params)
     if resp.status_code == 204:
         return None
     return resp.json() if resp.text else None

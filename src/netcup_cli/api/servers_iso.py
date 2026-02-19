@@ -11,7 +11,8 @@ def iso_get(server_id: int) -> dict:
 
 
 def iso_attach(server_id: int, body: dict) -> dict | None:
-    """POST /api/v1/servers/{serverId}/iso - Attach ISO (isoId or userIsoName, optional changeBootDeviceToCdrom)."""
+    """POST /api/v1/servers/{serverId}/iso - Attach ISO
+    (isoId or userIsoName, optional changeBootDeviceToCdrom)."""
     client = get_client()
     resp = client.post(f"/servers/{server_id}/iso", json=body)
     if resp.status_code == 204:

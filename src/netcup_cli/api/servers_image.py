@@ -20,7 +20,8 @@ def image_setup(server_id: int, body: dict) -> dict | None:
 
 
 def user_image_setup(server_id: int, body: dict) -> dict | None:
-    """POST /api/v1/servers/{serverId}/user-image - Setup user image (userImageName, optional diskName, emailNotification)."""
+    """POST /api/v1/servers/{serverId}/user-image - Setup user image
+    (userImageName, optional diskName, emailNotification)."""
     client = get_client()
     resp = client.post(f"/servers/{server_id}/user-image", json=body)
     if resp.status_code == 204:

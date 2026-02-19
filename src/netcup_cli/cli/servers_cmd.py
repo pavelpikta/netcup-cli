@@ -5,6 +5,19 @@ import click
 from ..api.servers import server_get, server_list, server_patch
 from ..exceptions import APIError, ConfigError
 from ..output import print_json
+from .servers_disks_cmd import disks_group
+from .servers_interfaces_cmd import firewall_group, interfaces_group
+from .servers_iso_cmd import iso_group
+from .servers_metrics_cmd import metrics_group
+from .servers_misc_cmd import (
+    guest_agent_group,
+    image_group,
+    logs_group,
+    storage_opt_group,
+    user_image_group,
+)
+from .servers_rescue_cmd import rescue_group
+from .servers_snapshots_cmd import snapshots_group
 
 
 @click.group("servers", help="List and manage servers.")
@@ -88,20 +101,6 @@ def set_nickname(server_id: int, nickname: str) -> None:
 
 
 # Register server sub-resource groups
-from .servers_disks_cmd import disks_group
-from .servers_interfaces_cmd import firewall_group, interfaces_group
-from .servers_iso_cmd import iso_group
-from .servers_metrics_cmd import metrics_group
-from .servers_misc_cmd import (
-    guest_agent_group,
-    image_group,
-    logs_group,
-    storage_opt_group,
-    user_image_group,
-)
-from .servers_rescue_cmd import rescue_group
-from .servers_snapshots_cmd import snapshots_group
-
 servers_group.add_command(disks_group, "disks")
 servers_group.add_command(interfaces_group, "interfaces")
 servers_group.add_command(firewall_group, "firewall")

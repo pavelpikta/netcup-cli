@@ -18,7 +18,8 @@ def snapshot_get(server_id: int, name: str) -> dict:
 
 
 def snapshot_create(server_id: int, body: dict) -> dict | None:
-    """POST /api/v1/servers/{serverId}/snapshots - body: name, optional description, diskName, onlineSnapshot."""
+    """POST /api/v1/servers/{serverId}/snapshots - body: name, optional
+    description, diskName, onlineSnapshot."""
     client = get_client()
     resp = client.post(f"/servers/{server_id}/snapshots", json=body)
     if resp.status_code == 204:

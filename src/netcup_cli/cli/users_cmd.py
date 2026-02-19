@@ -5,6 +5,17 @@ import click
 from ..api.users import user_get, user_info, user_update
 from ..exceptions import APIError, ConfigError
 from ..output import print_json
+from .users_resources_cmd import (
+    failoverips_group,
+    firewall_policies_group,
+    ssh_keys_group,
+    user_images_group,
+    user_isos_group,
+    user_logs_group,
+)
+from .users_resources_cmd import (
+    vlans_group as user_vlans_group,
+)
 
 
 @click.group("users", help="User info and user resources.")
@@ -53,18 +64,6 @@ def update_user(user_id: int, body: str) -> None:
 
 
 # Register user resource groups
-from .users_resources_cmd import (
-    failoverips_group,
-    firewall_policies_group,
-    ssh_keys_group,
-    user_images_group,
-    user_isos_group,
-    user_logs_group,
-)
-from .users_resources_cmd import (
-    vlans_group as user_vlans_group,
-)
-
 users_group.add_command(failoverips_group, "failoverips")
 users_group.add_command(firewall_policies_group, "firewall-policies")
 users_group.add_command(ssh_keys_group, "ssh-keys")

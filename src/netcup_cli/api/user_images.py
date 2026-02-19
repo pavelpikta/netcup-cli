@@ -17,7 +17,8 @@ def user_image_delete(user_id: int, key: str) -> None:
 
 
 def user_image_download_url(user_id: int, key: str) -> str | dict:
-    """GET /api/v1/users/{userId}/images/{key} - Get presigned download URL. Returns URL string or full response."""
+    """GET /api/v1/users/{userId}/images/{key} - Get presigned download URL.
+    Returns URL string or full response."""
     client = get_client()
     resp = client.get(f"/users/{user_id}/images/{key}")
     data = resp.json()

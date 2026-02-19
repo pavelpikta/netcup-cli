@@ -11,7 +11,8 @@ from .exceptions import AuthError, ConfigError
 
 
 def request_device_code() -> dict:
-    """Request device code for OAuth2 device flow. Returns dict with device_code, user_code, verification_uri_complete, etc."""
+    """Request device code for OAuth2 device flow. Returns dict with
+    device_code, user_code, verification_uri_complete, etc."""
     resp = requests.post(
         f"{AUTH_URL}/auth/device",
         data={"client_id": CLIENT_ID, "scope": SCOPE},
