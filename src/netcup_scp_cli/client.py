@@ -74,8 +74,13 @@ class APIClient:
             accept=accept,
         )
         if raise_for_status and not resp.ok:
+            body = (resp.text or "").strip()
+            message = f"API error: {resp.status_code}"
+            if body:
+                snippet = body if len(body) <= 500 else f"{body[:500]}..."
+                message = f"{message} - {snippet}"
             raise APIError(
-                f"API error: {resp.status_code}",
+                message,
                 status_code=resp.status_code,
                 body=resp.text,
             )

@@ -12,7 +12,10 @@ def ping() -> str:
 
 
 def get_maintenance() -> dict:
-    """GET /api/v1/maintenance - Get maintenance information."""
+    """GET /api/v1/maintenance - Get maintenance information.
+
+    Deprecated: this endpoint will be removed by 31.12.2026.
+    """
     client = get_client()
     resp = client.get("/maintenance")
     return resp.json()

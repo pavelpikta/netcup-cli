@@ -7,7 +7,7 @@ from ..exceptions import APIError, ConfigError
 from ..output import print_json
 
 
-@click.group("maintenance", help="Maintenance info and API ping.")
+@click.group("maintenance", help="Maintenance info (deprecated) and API ping.")
 def maintenance_group():
     pass
 
@@ -22,8 +22,18 @@ def ping_cmd() -> None:
     click.echo(result)
 
 
-@maintenance_group.command("info", help="Get maintenance window information.")
+@maintenance_group.command(
+    "info",
+    help="Get maintenance window information. Deprecated; API removal by 31.12.2026.",
+)
 def info() -> None:
+    click.echo(
+        click.style(
+            "Warning: GET /api/v1/maintenance is deprecated and will be removed by 31.12.2026.",
+            fg="yellow",
+        ),
+        err=True,
+    )
     try:
         data = get_maintenance()
     except (APIError, ConfigError) as e:

@@ -61,7 +61,10 @@ def v4_list(user_id: int | None, ip: str | None, server_id: int | None) -> None:
     print_json(data)
 
 
-@v4_group.command("route", help="Route failover IPv4 to server.")
+@v4_group.command(
+    "route",
+    help="Route failover IPv4 to server. Rate-limited (10 req / 5 min, 20 / 60 min).",
+)
 @user_id_option
 @click.argument("id", type=int)
 @click.argument("server_id", type=int)
@@ -97,7 +100,10 @@ def v6_list(user_id: int | None, ip: str | None, server_id: int | None) -> None:
     print_json(data)
 
 
-@v6_group.command("route", help="Route failover IPv6 to server.")
+@v6_group.command(
+    "route",
+    help="Route failover IPv6 to server. Rate-limited (10 req / 5 min, 20 / 60 min).",
+)
 @user_id_option
 @click.argument("id", type=int)
 @click.argument("server_id", type=int)

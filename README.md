@@ -8,7 +8,7 @@ Manage servers, rDNS, snapshots, rescue systems, firewall policies, SSH keys, VL
 | --- | --- |
 | **Python** | 3.10+ |
 | **License** | MIT |
-| **API** | [SCP REST API](https://www.servercontrolpanel.de) · OpenAPI 2026.0703.095128 |
+| **API** | [SCP REST API](https://www.servercontrolpanel.de) · OpenAPI 2026.0810.110900 |
 
 > **Why `netcup` and not `scp`?** The command is named `netcup` to avoid clashing with the standard Unix **scp** (secure copy) command.
 
@@ -41,7 +41,7 @@ netcup CLI talks to the [netcup SCP REST API](https://www.servercontrolpanel.de)
 - **Tasks** — List (with filters), get, and cancel async tasks.
 - **Users** — Current user info, get/update user; manage failover IPs, firewall policies, SSH keys, VLANs, user images/ISOs, logs.
 - **VLANs** — Get VLAN by ID (standalone).
-- **Maintenance** — Ping API and maintenance window info.
+- **Maintenance** — Ping API and maintenance window info (`info` is deprecated; API removal by 31.12.2026).
 
 All commands that need a **user context** (e.g. `users failoverips list`) use the **current user** from your token by default; override with `--user-id <id>` when needed.
 
@@ -209,11 +209,12 @@ For the full command set, see [Command reference](#command-reference).
 
 | Command | Arguments / options | Description |
 |--------|--------------------|-------------|
-| `servers list` | `[--limit N] [--offset N] [--ip IP] [--name NAME] [-q QUERY] [--sort FIELD]` | List servers (optional filters; `--sort` repeatable: `name`, `nickname`, prefix `-` for desc). |
+| `servers list` | `[--limit N] [--offset N] [--firewall-policy-id ID] [--ip IP] [--name NAME] [-q QUERY] [--sort FIELD]` | List servers (optional filters; `--sort` repeatable: `name`, `nickname`, prefix `-` for desc). |
 | `servers get <server_id>` | `[--no-live]` | Get one server; `--no-live` skips live info. |
 | `servers power <server_id> on\|off` | `[--option POWERCYCLE\|RESET\|POWEROFF]` | Power on/off or power cycle. |
 | `servers set-hostname <server_id> <hostname>` | | Set server hostname. |
 | `servers set-nickname <server_id> <nickname>` | | Set server nickname. |
+| `servers gpu-driver <server_id>` | | Presigned GPU driver download URL (if vGPU / driver available). |
 
 **Disks:** `servers disks <server_id>`
 
@@ -288,6 +289,7 @@ For the full command set, see [Command reference](#command-reference).
 |--------|---------------------|-------------|
 | `servers logs list` | `<server_id> [--limit N] [--offset N]` | Server logs. |
 | `servers guest-agent get` | `<server_id>` | Guest agent data. |
+| `servers guest-agent status` | `<server_id>` | Guest agent status. |
 | `servers image flavours` | `<server_id>` | Image flavours for setup. |
 | `servers image setup` | `<server_id> --body JSON` | Setup image (JSON body per API). |
 | `servers user-image setup` | `<server_id> --name NAME [--disk-name NAME] [--email-notification]` | Setup user image. |
@@ -324,7 +326,7 @@ For the full command set, see [Command reference](#command-reference).
 |--------|---------|-------------|
 | `users info` | | Current user (from token). |
 | `users get <user_id>` | | Get user by ID. |
-| `users update <user_id> --body JSON` | | Update user (UserSave schema). |
+| `users update <user_id> --body JSON` | | Update user (UserSave: `language` and `timeZone` required). `secureMode` is no longer in the schema. |
 
 All commands below support **`--user-id <id>`**; if omitted, the current user is used.
 
@@ -333,9 +335,9 @@ All commands below support **`--user-id <id>`**; if omitted, the current user is
 | Subcommand | Example |
 |------------|---------|
 | `v4 list` | `[--ip IP] [--server-id ID]` |
-| `v4 route <id> <server_id>` | Route failover IPv4 to server. |
+| `v4 route <id> <server_id>` | Route failover IPv4 to server. Rate-limited (429: 10 req / 5 min, 20 / 60 min). |
 | `v6 list` | Same options as v4. |
-| `v6 route <id> <server_id>` | Route failover IPv6 to server. |
+| `v6 route <id> <server_id>` | Route failover IPv6 to server. Same rate limit as v4. |
 
 **Firewall policies:** `users firewall-policies`
 
@@ -398,7 +400,7 @@ All commands below support **`--user-id <id>`**; if omitted, the current user is
 | Command | Description |
 |--------|-------------|
 | `maintenance ping` | Check API availability (returns OK). |
-| `maintenance info` | Maintenance window information. |
+| `maintenance info` | Maintenance window information. **Deprecated**; API removal by 31.12.2026. |
 
 ---
 
@@ -460,13 +462,20 @@ To point at another environment, you would need to change the code in `netcup_sc
 ### `API error: 404` / `422` / `503`
 
 - **Cause:** Resource not found, validation error, or service temporarily unavailable (e.g. maintenance).
-- **Action:** Check IDs and request body; for 503, retry later or check maintenance info: `netcup maintenance info`.
+- **Action:** Check IDs and request body; for 503, retry later. You can still run `netcup maintenance info` until that endpoint is removed (deprecated; API removal by 31.12.2026).
+
+### `API error: 429`
+
+- **Cause:** Too many failover IP routing requests. The API limits routing to **10 requests per 5 minutes** and **20 per 60 minutes**.
+- **Relevant command:** `users failoverips v4|v6 route`.
+- **Action:** Wait and retry. The error message includes the API response body when present.
 
 ---
 
 ## API compatibility
 
-- **Spec:** The CLI is built against the SCP REST API as described in the OpenAPI spec (version **2026.0703.095128** in the bundled `openapi.json`).
+- **Spec:** The CLI is built against the SCP REST API as described in the OpenAPI spec (version **2026.0810.110900** in the bundled `openapi.json`).
+- **Spec notes:** `GET /maintenance` is deprecated (remove by 31.12.2026). `User.secureMode` / `UserSave.secureMode` were removed. Failover IP route may return **429** (10 req / 5 min, 20 / 60 min).
 - **Coverage:** Most endpoints from the spec are implemented (servers, rDNS, tasks, users, failover IPs, firewall policies, SSH keys, VLANs, images/ISOs including S3 upload, logs, maintenance). Intentionally skipped: `GET /openapi` (use bundled snapshot) and `POST /openapi/mcp` (explore-only; no CLI wrapper). Coverage is guarded by `tests/test_openapi_coverage.py`.
 - **Breaking changes:** If the API introduces breaking changes, the CLI may need updates. Check the [netcup SCP API forum](https://forum.netcup.de/netcup-anwendungen/scp-server-control-panel/scp-server-control-panel-rest-api/) and release notes.
 
