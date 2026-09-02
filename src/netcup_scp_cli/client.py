@@ -114,8 +114,11 @@ class APIClient:
         path: str,
         json: dict | list | None = None,
         content_type: str = "application/merge-patch+json",
+        params: dict[str, Any] | None = None,
     ) -> requests.Response:
-        return self.request("PATCH", path, json=json, content_type=content_type)
+        return self.request(
+            "PATCH", path, json=json, content_type=content_type, params=params
+        )
 
     def delete(self, path: str) -> requests.Response:
         return self.request("DELETE", path)
