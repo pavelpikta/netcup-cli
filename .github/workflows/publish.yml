@@ -1,5 +1,7 @@
 name: publish
 
+# Manual / human-created releases. Automated releases publish from release.yml
+# because events created with GITHUB_TOKEN do not trigger other workflows.
 on:
   release:
     types:
@@ -11,6 +13,8 @@ permissions:
 
 jobs:
   pypi:
+    # Skip when the release was created by github-actions (already published in release.yml).
+    if: github.event_name == 'workflow_dispatch' || github.event.release.author.login != 'github-actions[bot]'
     runs-on: ubuntu-latest
     environment: pypi
     permissions:

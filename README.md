@@ -510,7 +510,7 @@ Versions are cut automatically on pushes to `main` by [python-semantic-release](
 - `fix:` → patch bump
 - `BREAKING CHANGE` / `feat!:` → major bump
 
-Git tags and GitHub Releases use bare SemVer (for example `1.0.1`, not `v1.0.1`). Publishing to PyPI still happens from the existing `publish` workflow when a GitHub Release is published.
+Git tags and GitHub Releases use bare SemVer (for example `1.0.1`, not `v1.0.1`). PyPI upload runs in the same `Release` workflow after a version is cut (events created with `GITHUB_TOKEN` do not start other workflows). The `publish` workflow remains for manual `workflow_dispatch` or human-created GitHub Releases.
 
 Do not bump versions or write `release:` commits by hand; use conventional commit types instead. See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
