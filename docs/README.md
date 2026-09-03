@@ -17,6 +17,7 @@ This folder holds additional documentation. The **main reference** is the [READM
 | Config file & paths | [Configuration](../README.md#configuration) |
 | Errors (406, auth, etc.) | [Troubleshooting](../README.md#troubleshooting) |
 | API version & OpenAPI | [API compatibility](../README.md#api-compatibility) |
+| Releases & versioning | [Releases](../README.md#releases) |
 | Source layout | [Project structure](../README.md#project-structure) |
 
 ## Version history

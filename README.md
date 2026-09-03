@@ -26,6 +26,7 @@ Manage servers, rDNS, snapshots, rescue systems, firewall policies, SSH keys, VL
 - [Output and exit codes](#output-and-exit-codes)
 - [Troubleshooting](#troubleshooting)
 - [API compatibility](#api-compatibility)
+- [Releases](#releases)
 - [Project structure](#project-structure)
 - [Getting help](#getting-help)
 - [License](#license)
@@ -501,6 +502,20 @@ Use this with an MCP-capable client if you want explore-only access to the API s
 
 ---
 
+## Releases
+
+Versions are cut automatically on pushes to `main` by [python-semantic-release](https://python-semantic-release.readthedocs.io/) from [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` → minor bump
+- `fix:` → patch bump
+- `BREAKING CHANGE` / `feat!:` → major bump
+
+Git tags and GitHub Releases use bare SemVer (for example `1.0.1`, not `v1.0.1`). Publishing to PyPI still happens from the existing `publish` workflow when a GitHub Release is published.
+
+Do not bump versions or write `release:` commits by hand; use conventional commit types instead. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+---
+
 ## Project structure
 
 ```
@@ -510,6 +525,8 @@ netcup-cli/                    # git repo (local clone)
 ├── README.md               # This file
 ├── openapi.json            # Snapshot of SCP OpenAPI spec
 ├── .github/workflows/ci.yml
+├── .github/workflows/release.yml  # python-semantic-release on main
+├── .github/workflows/publish.yml  # PyPI on GitHub Release
 ├── tests/                  # OpenAPI coverage + unit tests
 └── src/netcup_scp_cli/
     ├── __init__.py         # Version
